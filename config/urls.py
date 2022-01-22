@@ -18,6 +18,8 @@ from django.urls import path, include
 from . import views as config_views
 from weatherapp import views
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', config_views.home),
