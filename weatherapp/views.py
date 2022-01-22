@@ -3,6 +3,55 @@ from django.shortcuts import render
 import requests
 import json
 import datetime
+import pandas as pd
+import urllib
+import urllib.request
+from bs4 import BeautifulSoup
+
+# ServiceKey = 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w=='
+
+# url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+
+# queryParams = '?' + urllib.parse.urlencode(
+#     {
+#         urllib.parse.quote_plus('ServiceKey') : ServiceKey, # key를 바로 입력해도 됩니다.
+#         urllib.parse.quote_plus('numOfRows') : '113', # 총 14개의 항목을 3시간 단위로 순차적으로 불러옵니다. 다음날 24시간예보에 필요한 만큼만 가져왔습니다.
+#         urllib.parse.quote_plus('dataType') : 'JSON', # JSON, XML 두가지 포멧을 제공합니다.
+#         urllib.parse.quote_plus('base_date') : '20220123', # 예보 받을 날짜를 입력합니다. 최근 1일간의 자료만 제공합니다.
+#         urllib.parse.quote_plus('base_time') : '0200', # 예보 시간을 입력합니다. 2시부터 시작하여 3시간 단위로 입력 가능합니다.
+#         urllib.parse.quote_plus('nx') : '62', # 울산 태양광 발전소 x 좌표입니다. '기상청18_동네예보 조회서비스_오픈API활용가이드.zip'에 포함 된 excel파일을 통해 확인 가능합니다.
+#         urllib.parse.quote_plus('ny') : '122' # 울산 태양광 발전소 y 좌표입니다. '기상청18_동네예보 조회서비스_오픈API활용가이드.zip'에 포함 된 excel파일을 통해 확인 가능합니다.
+#     }
+# )
+
+# response = urllib.request.urlopen(url + queryParams).read()
+# response = json.loads(response)
+
+# fcst_df = pd.DataFrame()
+# date = '2022-01-23'
+# fcst_df['Forecast_time'] = [f'{date} {hour}:00' for hour in range(24)]
+# row_idx = 0
+
+# for i, data in enumerate(response['response']['body']['items']['item']):
+#     if i > 19:
+#         if data['category']=='REH':
+#             fcst_df.loc[row_idx, 'Humidity'] = float(data['fcstValue'])
+#             print('category:Humidity,',data['category'], 'baseTime:',data['baseTime'], ', fcstTime:', data['fcstTime'], ', fcstValue:', data['fcstValue'])
+#         elif data['category']=='T3H':
+#             fcst_df.loc[row_idx, 'Temperature'] = float(data['fcstValue'])
+#             print('category:Temperature,',data['category'], 'baseTime:',data['baseTime'], ', fcstTime:', data['fcstTime'], ', fcstValue:', data['fcstValue'])
+#         elif data['category']=='SKY':
+#             fcst_df.loc[row_idx, 'Cloud'] = float(data['fcstValue'])
+#             print('category:Cloud,',data['category'], 'baseTime:',data['baseTime'], ', fcstTime:', data['fcstTime'], ', fcstValue:', data['fcstValue'])
+#         elif data['category']=='VEC':
+#             fcst_df.loc[row_idx, 'WindDirection'] = float(data['fcstValue'])
+#             print('category:WindDirection,',data['category'], 'baseTime:',data['baseTime'], ', fcstTime:', data['fcstTime'], ', fcstValue:', data['fcstValue'])
+#         elif data['category']=='WSD':
+#             fcst_df.loc[row_idx, 'WindSpeed'] = float(data['fcstValue'])
+#             print('category:WindSpeed,',data['category'], 'baseTime:',data['baseTime'], ', fcstTime:', data['fcstTime'], ', fcstValue:', data['fcstValue'], '\n')
+#             row_idx+=3
+
+
 
 
 # 날씨 출력 
@@ -11,19 +60,93 @@ def get_weather(request):
 
     today = datetime.datetime.today()
     base_date = today.strftime("%Y%m%d")
-    base_time = "0800"
+    base_time = "0200"
 
-    # nx = "62"
-    # ny = "122"
+
 
     params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 
-        'pageNo' : '2', 'numOfRows' : '1000', 'dataType' : 'JSON', 
+        'pageNo' : '1', 'numOfRows' : '10', 'dataType' : 'JSON', 
         'base_date' : base_date, 'base_time' : base_time, 'nx' : '62', 'ny' : '122'}
 
-    response = requests.get(url, params=params)
-    return HttpResponse(response)
+
+    res = requests.get(url, params=params)
+    print("=== response json data start ===")
+    print(res.text)
+    print("=== response json data end ===")
+    print()
+
+    r_dict = json.loads(res.text)
+    r_response = r_dict.get("response")
+    r_body = r_response.get("body")
+    r_items = r_body.get("items")
+    r_item = r_items.get("item")
+
+    #거의 성공적
+    data = {}
 
 
+
+    for item in r_item:
+        if(item.get("category") == "TMP"):
+            data['기온'] = item["fcstValue"]
+            
+        if(item.get("category") == "PTY"):
+            weather_code = item.get("fcstValue")
+
+            if weather_code == '1':
+                weather_state = '비'
+            elif weather_code == '2':
+                weather_state = '비/눈'
+            elif weather_code == '3':
+                weather_state = '눈'
+            elif weather_code == '4':
+                weather_state = '소나기'
+            else:
+                weather_state = '없음'
+
+            data['눈/비 소식'] = weather_state
+            
+
+    return JsonResponse(data)
+    
+
+
+
+
+
+
+
+
+    # response = requests.get(url, params=params)
+    
+    # r_dict = json.loads(response.text)
+    # r_response = r_dict.get("response")
+    # r_body = r_response.get("body")
+    # r_items = r_body.get("items")
+    # r_item = r_items.get("item")
+
+    # result = {}
+    # for item in r_item:
+    #         if(item.get("category") == "T1H"):
+    #                 result = item
+    #                 break
+    # for item in r_item:
+    #         if(item.get("category") == "RN1"):
+    #                 result2 = item
+    #                 break
+
+
+    # print("=== response dictionary(python object) data start ===")
+    # print(result.get("baseTime")[:-2] +" temp : " + result.get("fcstValue") + "C")
+    # print(result2.get("baseTime")[:-2] +" rain : " + result2.get("fcstValue") + "mm")
+    # print("=== response dictionary(python object) data end ===")
+    # print()
+    
+
+
+
+
+    
 
 # 위,경도 정보 격자로 변환
 import math
@@ -59,6 +182,9 @@ if first == 0 :
     ro = math.tan(PI * 0.25 + olat * 0.5)
     ro = re * sf / math.pow(ro, sn)
     first = 1
+
+
+
 
 def mapToGrid(lat, lon, code = 0 ):
     ra = math.tan(PI * 0.25 + lat * DEGRAD * 0.5)
