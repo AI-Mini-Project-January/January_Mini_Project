@@ -1,0 +1,8 @@
+from django.urls import path, include
+from . import views
+
+app_name = 'weatherapp'
+
+urlpatterns = [
+    path('get_weather/', views.get_weather),
+]
