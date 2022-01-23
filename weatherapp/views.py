@@ -8,8 +8,8 @@ import urllib
 import urllib.request
 from bs4 import BeautifulSoup
 
-def static(request):
-    return render(request, 'weatherapp/weather.html')
+def get_clothes(request):
+    return render(request, 'weatherapp/clothes.html')
 
 # 날씨 출력 
 def get_weather(request):
@@ -17,12 +17,7 @@ def get_weather(request):
 
     today = datetime.datetime.today()
     base_date = today.strftime("%Y%m%d")
-    base_time = "0800"
-
-    
-
-
-    
+    base_time = "0200"
 
     params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 
         'pageNo' : '1', 'numOfRows' : '50', 'dataType' : 'JSON', 
@@ -43,7 +38,7 @@ def get_weather(request):
     r_items = r_body.get("items")
     r_item = r_items.get("item")
     
-
+    
     data = {}
     for item in r_item:
         if(item.get("category") == "TMP"):
@@ -84,10 +79,26 @@ def get_weather(request):
             else:
                 weather_state = '흐림'
 
-            data['날씨'] = weather_state
+            data['sky'] = weather_state
+    # if data['날씨'] == '구름많음':
 
+    tmp = data['기온']
+    wsd = data['풍속']
+    sky = data['sky']
+    pty = data['눈/비 소식']
+    pop = data['강수확률']
+    reh = data['습도']
     
-    return JsonResponse(data)
+    print(data)
+    print(tmp, wsd, sky, pty, pop, reh)
+    
+    return render(request, 'weatherapp/weather.html', data)
+
+
+
+# def get_weather_image(request):
+#     if sky == "맑음":
+
 
 
 
@@ -183,7 +194,23 @@ def get_weather(request):
     # print()
     
 
+# import requests
+# import googlemaps
+# import json
 
+
+# url = f'https://www.googleapis.com/geolocation/v1/geolocate?key={GOOGLE_API_KEY}'
+# data = {
+#     'considerIp': True, # 현 IP로 데이터 추출
+# }
+
+# result = requests.post(url, data) # 해당 API에 요청을 보내며 데이터를 추출한다.
+
+# print(result.text)
+# result2 = json.loads(result.text)
+
+# lat = result2["location"]["lat"] # 현재 위치의 위도 추출
+# lng = result2["location"]["lng"] # 현재 위치의 경도 추출
 
 
     
