@@ -8,6 +8,90 @@ import urllib
 import urllib.request
 from bs4 import BeautifulSoup
 
+def static(request):
+    return render(request, 'weatherapp/weather.html')
+
+# 날씨 출력 
+def get_weather(request):
+    url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+
+    today = datetime.datetime.today()
+    base_date = today.strftime("%Y%m%d")
+    base_time = "0800"
+
+    
+
+
+    
+
+    params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 
+        'pageNo' : '1', 'numOfRows' : '50', 'dataType' : 'JSON', 
+        'base_date' : base_date, 'base_time' : base_time, 'nx' : '62', 'ny' : '122'}
+
+
+    res = requests.get(url, params=params)
+
+    # return HttpResponse(res)
+    print("=== response json data start ===")
+    print(res.text)
+    print("=== response json data end ===")
+    print()
+
+    r_dict = json.loads(res.text)
+    r_response = r_dict.get("response")
+    r_body = r_response.get("body")
+    r_items = r_body.get("items")
+    r_item = r_items.get("item")
+    
+
+    data = {}
+    for item in r_item:
+        if(item.get("category") == "TMP"):
+            data['기온'] = item["fcstValue"] + '℃'
+            
+        if(item.get("category") == "PTY"):
+            rainfall_code = item.get("fcstValue") 
+
+            if rainfall_code == '1':
+                rainfall_state = '비'
+            elif rainfall_code == '2':
+                rainfall_state = '비/눈'
+            elif rainfall_code == '3':
+                rainfall_state = '눈'
+            elif rainfall_code == '4':
+                rainfall_state = '소나기'
+            else:
+                rainfall_state = '없음'
+
+            data['눈/비 소식'] = rainfall_state
+
+        if(item.get("category") == "POP"):
+            data['강수확률'] = item["fcstValue"] + '%'
+
+        if(item.get("category") == "REH"):
+            data['습도'] = item["fcstValue"] + '%'
+
+        if(item.get("category") == "WSD"):
+            data['풍속'] = item["fcstValue"] + 'm/s'
+
+        if(item.get("category") == "SKY"):
+            weather_code = item.get("fcstValue")
+
+            if weather_code == '1':
+                weather_state = '맑음'
+            elif weather_code == '3':
+                weather_state = '구름많음'
+            else:
+                weather_state = '흐림'
+
+            data['날씨'] = weather_state
+
+    
+    return JsonResponse(data)
+
+
+
+
 # ServiceKey = 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w=='
 
 # url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
@@ -54,66 +138,22 @@ from bs4 import BeautifulSoup
 
 
 
-# 날씨 출력 
-def get_weather(request):
-    url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 
-    today = datetime.datetime.today()
-    base_date = today.strftime("%Y%m%d")
-    base_time = "0200"
-
-
-
-    params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 
-        'pageNo' : '1', 'numOfRows' : '10', 'dataType' : 'JSON', 
-        'base_date' : base_date, 'base_time' : base_time, 'nx' : '62', 'ny' : '122'}
-
-
-    res = requests.get(url, params=params)
-    print("=== response json data start ===")
-    print(res.text)
-    print("=== response json data end ===")
-    print()
-
-    r_dict = json.loads(res.text)
-    r_response = r_dict.get("response")
-    r_body = r_response.get("body")
-    r_items = r_body.get("items")
-    r_item = r_items.get("item")
-
-    #거의 성공적
-    data = {}
-
-
-
-    for item in r_item:
-        if(item.get("category") == "TMP"):
-            data['기온'] = item["fcstValue"]
-            
-        if(item.get("category") == "PTY"):
-            weather_code = item.get("fcstValue")
-
-            if weather_code == '1':
-                weather_state = '비'
-            elif weather_code == '2':
-                weather_state = '비/눈'
-            elif weather_code == '3':
-                weather_state = '눈'
-            elif weather_code == '4':
-                weather_state = '소나기'
-            else:
-                weather_state = '없음'
-
-            data['눈/비 소식'] = weather_state
-            
-
-    return JsonResponse(data)
     
 
 
 
 
+    #미세먼지 api
+    # url = 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth'
+    # params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 'returnType' : 'json', 'numOfRows' : '100', 'pageNo' : '10', 'searchDate' : '2022-01-23', 'InformCode' : 'PM10' }
 
+    # result = requests.get(url, params=params)
+    # print(result.text)
+    # result2 = json.loads(result.text)
+    # r_item = result2.get("item")
+
+    # print(r_item)
 
 
 
