@@ -5,4 +5,6 @@ app_name = 'weatherapp'
 
 urlpatterns = [
     path('get_weather/', views.get_weather),
+    path('static/', views.static),
+
 ]
