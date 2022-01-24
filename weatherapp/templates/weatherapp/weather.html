@@ -1,58 +1,68 @@
-
-{% comment %} {% if data %}
-        {{ data | json_script:'jsonData'}}
-        name is : 
-        <script type = "text/javascript"> 
-            var placeData = JSON.parse(document.getElementById('jsonData').textContent);
-            for( var key1 in placeData){
-                var jsonData = JSON.parse(placeData[key1])
-                   for (var key2 in jsonData)
-                {
-                    document.write(key2+" : " +jsonData[key2]+"<br>")            
-                }
-            }
-        </script>
-
-    {% endif %} {% endcomment %}
-
-
-<h2>위치</h2>
-<h3>날씨</h3>
-<p>{{ data.tmp }} </p><hr>
-
-<!DOCTYPE html>
-<html>
-<body>
-<p id="example"></p>
-
-<script>
-const text = jsonData
-const object = JSON.parse(text);
-document.getElementById("example").innerHTML = object.tmp;
-</script>
-
-</body>
-</html>
-
 {% load static %}
+
+
+<h2>Weather & Clothes   Board   Mypage</h2>
+<h2>날씨</h2>
+
+<td>
+    {% if data.2 == '맑음' %}
+        <img src='{% static "clear-day.svg" %}'>
+    {% elif data.2 == '구름많음' %}
+        <img src='{% static "cloudy.svg" %}'>
+    {% else %}
+        <img src='{% static "overcast.svg" %}'>
+    {% endif %}
+</td>
+<h3>{{ data.2 }} 기온 {{ data.0 }} </h3>
+
+
+{% comment %} 풍속 {% endcomment %}
+<h3>바람 {{ data.1 }}</h3>
+
+<h3> 눈/비 소식 {{ data.3 }} </h3>
+
+
+<h3> 강수 확률 {{ data.4 }}</h3>
+<h3>습도 {{ data.5 }}</h3>
+{% comment %} <p>{{ data }} </p><hr> {% endcomment %}
+
+
+
+
+<h2>옷 추천</h2>
+<h3>대장님 오늘은 이렇게 입으시는 건 어때요?</h3>
 
 
 
 <td>
-    {% if data.sky == '맑음' %}
-        
-        <img src='{% static "clear-day.svg" %}'>
+    {% if data.0 >= 28 %}
+        <img src='{% static "sleeveless-shirt.png" %}'>
+    {% elif data.0 >= 23 %}
+        <img src='{% static "skirt.png" %}'>
+    {% elif data.0 >= 20 %}
+        <img src='{% static "dress.png" %}'>
+    {% elif data.0 >= 17 %}
+        <img src='{% static "ripped-jeans.png" %}'>
+    {% elif data.0 >= 12 %}
+        <img src='{% static "denim-jacket.png" %}'>
+    {% elif data.0 >= 9 %}
+        <img src='{% static "trench-coat.png" %}'>
+    {% elif data.0 >= 5 %}
+        <img src='{% static "coat.png" %}'>
+    {% else %}
+        <img src='{% static "puffer-coat.png" %}'>
+        <img src='{% static "scarf.png" %}'>
+        <img src='{% static "mittens.png" %}'>
+        <img src='{% static "beanie.png" %}'>
+
     {% endif %}
 </td>
 
 
-<img src='{% static "snow.svg" %}'>
-<img src='{% static "clear-day.svg" %}'>
-<img src='{% static "clear-night.svg" %}'>
-<img src='{% static "cloudy.svg" %}'>
-<img src='{% static "rain.svg" %}'>
-<img src='{% static "shower.svg" %}'>
-<img src='{% static "wind.svg" %}'>
+
+
+
+
 
 
 
