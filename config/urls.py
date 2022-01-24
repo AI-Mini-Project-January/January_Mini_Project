@@ -24,5 +24,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', config_views.home),
     path('weather/', include('weatherapp.urls')),
-    path('mypage/', include('mypage.urls')),
 ]
