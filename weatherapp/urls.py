@@ -5,6 +5,4 @@ app_name = 'weatherapp'
 
 urlpatterns = [
     path('get_weather/', views.get_weather),
-    path('get_location/', views.get_location),
-
 ]

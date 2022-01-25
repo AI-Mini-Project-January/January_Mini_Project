@@ -1,30 +1,49 @@
-from django.http import HttpResponse
-import requests
-import json
-import os
-import requests
-
-
-
-def get_location(request):
-    url = f'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyBf9kIq9ciMUvzAr5neaJRMrlbx7rMZJx0'
-    data = {
-        'considerIp': True, # 현 IP로 데이터 추출
-    }
-
-    result = requests.post(url, data) # 해당 API에 요청을 보내며 데이터를 추출한다.
-
-    print(result.text)
-    result2 = json.loads(result.text)
-
-    lat = result2["location"]["lat"] # 현재 위치의 위도 추출
-    lng = result2["location"]["lng"] # 현재 위치의 경도 추출
-
-    print(lat, lng)
-
-
-# 위,경도 정보 격자로 변환
 import math
+
+def grid(lat, lng) :
+
+    RE = 6371.00877 # 지구 반경(km)
+    GRID = 5.0      # 격자 간격(km)
+    SLAT1 = 30.0    # 투영 위도1(degree)
+    SLAT2 = 60.0    # 투영 위도2(degree)
+    OLON = 126.0    # 기준점 경도(degree)
+    OLAT = 38.0     # 기준점 위도(degree)
+    XO = 43         # 기준점 X좌표(GRID)
+    YO = 136        # 기1준점 Y좌표(GRID)
+
+    DEGRAD = math.pi / 180.0
+    RADDEG = 180.0 / math.pi
+
+    re = RE / GRID
+    slat1 = SLAT1 * DEGRAD
+    slat2 = SLAT2 * DEGRAD
+    olon = OLON * DEGRAD
+    olat = OLAT * DEGRAD
+
+    sn = math.tan(math.pi * 0.25 + slat2 * 0.5) / math.tan(math.pi * 0.25 + slat1 * 0.5)
+    sn = math.log(math.cos(slat1) / math.cos(slat2)) / math.log(sn)
+    sf = math.tan(math.pi * 0.25 + slat1 * 0.5)
+    sf = math.pow(sf, sn) * math.cos(slat1) / sn
+    ro = math.tan(math.pi * 0.25 + olat * 0.5)
+    ro = re * sf / math.pow(ro, sn);
+    rs = {}
+
+    ra = math.tan(math.pi * 0.25 + (lat) * DEGRAD * 0.5)
+    ra = re * sf / math.pow(ra, sn)
+
+    theta = lng * DEGRAD - olon
+    if theta > math.pi :
+        theta -= 2.0 * math.pi
+    if theta < -math.pi :
+        theta += 2.0 * math.pi
+    theta *= sn
+    rs['x'] = math.floor(ra * math.sin(theta) + XO + 0.5)
+    rs['y'] = math.floor(ro - ra * math.cos(theta) + YO + 0.5)
+    request.session['x':rs['x'], 'y':rs['y']]
+
+
+    
+
 NX = 149            ## X축 격자점 수
 NY = 253            ## Y축 격자점 수
 
@@ -43,7 +62,6 @@ if first == 0 :
     DEGRAD = PI/ 180.0
     RADDEG = 180.0 / PI
 
-
     re = Re / grid
     slat1 = slat1 * DEGRAD
     slat2 = slat2 * DEGRAD
@@ -58,9 +76,6 @@ if first == 0 :
     ro = re * sf / math.pow(ro, sn)
     first = 1
 
-
-
-
 def mapToGrid(lat, lng, code = 0 ):
     ra = math.tan(PI * 0.25 + lat * DEGRAD * 0.5)
     ra = re * sf / pow(ra, sn)
@@ -70,31 +85,10 @@ def mapToGrid(lat, lng, code = 0 ):
     if theta < -PI :
         theta += 2.0 * PI
     theta *= sn
+
+    
     x = (ra * math.sin(theta)) + xo
     y = (ro - ra * math.cos(theta)) + yo
     x = int(x + 1.5)
     y = int(y + 1.5)
-    return HttpResponse(x, y)
-
-
-
-
-
-
-
-
-
-
-# def get_location(request):
-#     load_dotenv(verbose=True)
-
-#     LOCATION_API_KEY = os.getenv('2caf1daeadfba451f332bd393d6144ba')
-
-#     url = f'https://www.googleapis.com/geolocation/v1/geolocate?key={LOCATION_API_KEY}'
-#     data = {
-#         'considerIp': True,
-#     }
-
-#     result = requests.post(url, data)
-#     print(result.text)
-#     return HttpResponse(result.text)
+    return x, y
