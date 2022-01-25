@@ -32,8 +32,8 @@ class Join(APIView):
 
 class Login(APIView):
     def get(self, request):
-        return render(request, "user/testIndex.html")
-        #return render(request, "user/login.html")
+        #return render(request, "user/testIndex.html")
+        return render(request, "user/login.html")
 
     def post(self, request):
         #TODO 로그인
@@ -60,8 +60,8 @@ class Login(APIView):
 class Logout(APIView):
     def get(self, request):
         request.session.flush()
-        return render(request, "user/testIndex.html")
-        #return render(request, "user/login.html")
+        #return render(request, "user/testIndex.html")
+        return render(request, "user/login.html")
 
 # UploadProfile 로직은 파일이랑 아이디를 불러옴
 # 파일은 Feed 생성할 때 처럼 이미지 이름바꿔주는방식으로 랜덤으로 고유값 만들어주고 media에 저장
