@@ -105,5 +105,4 @@ class Profile(APIView):
         return render(request, 'content/profile.html', context=dict(user=user))
 
 def update(request):
-    if request.method == 'GET':
-        return render(request, 'update.html')
+    return render(request, 'content/update.html', {})
