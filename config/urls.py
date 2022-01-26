@@ -22,6 +22,5 @@ from weatherapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', config_views.home),
-    path('weather/', include('weatherapp.urls')),
+    path('home/', views.get_weather),
 ]
