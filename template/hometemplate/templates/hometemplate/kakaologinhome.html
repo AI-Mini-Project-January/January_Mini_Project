@@ -45,7 +45,7 @@
       <h1 class="text-light"><span>weather & Gather</span></h1>
       {% if check %}
         <div>
-            <h1>카카오 로그아웃</h1>
+            <h2 class = "text-light"><span>카카오 로그아웃</span></h2>
                 <form action="/home/kakaoLogout" method="GET">
                     <button type = "카카오 로그아웃">
                         <img src = '/static/assets/img/kakaologo.jpg' width = 50, height = 50 />
@@ -54,7 +54,7 @@
         </div>
     {% else %}
         <div>
-            <h1>카카오 로그인</h1>
+          <h2 class = "text-light"><span>카카오 로그인</span></h2>
                 <form action="/home/kakaoLoginLogic" method="GET">
                     <button type = "카카오 로그인">
                         <img src = '/static/assets/img/kakaologo.jpg' width = 50, height = 50 />
