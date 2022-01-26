@@ -7,12 +7,14 @@ from user.models import User
 from .models import Feed, Like, Bookmark
 import os
 from django.shortcuts import redirect
+from .forms import ProfileForm
+from user.models import User
 
 # config.settings에서 MEDIA_ROOT 가져올꺼임
 from config.settings import MEDIA_ROOT 
 #2. 그러기위해선 일단 모델에 있는 객체를 다 가져와야함, 모델에서 Feed를 가져올거야
 #3. .models가 의미하는건 나랑 같은 폴더안에 있는 models를 의미, 모델쓰고싶으면 이렇게 출처를 적어야함 
-from .forms import CustomUserChangeForm
+# from .forms import CustomUserChangeForm
 
 
 # content에 쓸 내용을 html 따로 안만들고 여기다가 만듦
@@ -107,37 +109,9 @@ class Profile(APIView):
         
         return render(request, 'content/profile.html', context=dict(user=user))
 
+
+# 톱니바퀴 버튼 누르면 나오는 페이지(수정 기능은 아직,,)
+from django.shortcuts import render
+
 def update(request):
-    user_change_form = CustomUserChangeForm(request.POST, instance=request.user)
-    identi = request.session.get('identi', None)
-
-    if identi is not None:
-        return render(request, 'update.html', {
-                'user_change_form': user_change_form,
-            })
-    if request.user.is_anonymous:
-        return render(request, 'update.html', {
-                'user_change_form': user_change_form,
-            })
-
-
-
-
-    # print(request.user.is_authenticated)
-    # if request.user.is_authenticated: 
-    #     if request.method == 'POST':
-    #         user_change_form = CustomUserChangeForm(request.POST, instance=request.user)
-    #         if user_change_form.is_valid():
-    #             user = user_change_form.save()
-    #             return redirect('main/')
-    #         return redirect('content/update/')
-    #     else:
-    #         user_change_form = CustomUserChangeForm(instance=request.user)
-    #         return render(request, 'update.html', {
-    #             'user_change_form': user_change_form,
-    #         })
-    # else:
-    #     return redirect('content/update/')
-
-
-
+    return render(request, 'content/update.html')

@@ -5,5 +5,5 @@ from . import views
 urlpatterns = [
     path('upload', UploadFeed.as_view()),
     path('profile', Profile.as_view()),
-    path('update/', views.update),
+    path('update/', views.update, name='update'),
 ] 

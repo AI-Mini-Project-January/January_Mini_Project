@@ -1,14 +1,15 @@
-{% load bootstrap4 %}
+{% comment %} {% block content %}
+    <h2>User : {{ user }}</h2>
+    {% if user.user %}
+        <ul>
+            <li>{{ user.user.nickname }}</li>
+            <li>{{ user.user.age }}</li>
+        </ul>
+    {% endif %}
 
-{% block body %}
-    <h1 class="text-center">회원정보 변경</h1>
-    <form method="POST" enctype="multipart/form-data">
-    <!-- 파일 업로드 시 form method를 POST로 -->
-        {% csrf_token %}
-        {% bootstrap_form user_change_form %}
-        {% bootstrap_form profile_form %}
-        <button type="submit" class="btn btn-primary">수정</button>
-    </form>
+    <a href="{% url 'profile_edit' %}" class = "btn btn-primary">
+        프로필 수정
+    </a> {% endcomment %}
 
-
+<h1>페이지</h1>
     
