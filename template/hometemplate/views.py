@@ -9,22 +9,25 @@ import json
 def home(request):
     return render(request, 'hometemplate/index.html')
 
+# def kakaologinhome(request):
+#     return render(request, 'hometemplate/kakaologinhome.html')
+
 def kakaologin(request):
     _context = {'check':False}
     if request.session.get('access_token'):
         _context['check'] = True
-    return render(request, 'template/kakaologinhome.html', _context)
+    return render(request, 'hometemplate/kakaologinhome.html', _context)
 
 def kakaoLoginLogic(request):
     _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
-    _redirectUrl = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+    _redirectUrl = 'http://127.0.0.1:8000/home/kakaoLoginLogicRedirect'
     _url = f'https://kauth.kakao.com/oauth/authorize?client_id={_restApiKey}&redirect_uri={_redirectUrl}&response_type=code'
     return redirect(_url)
 
 def kakaoLoginLogicRedirect(request):
     _qs = request.GET['code']
     _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
-    _redirect_uri = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+    _redirect_uri = 'http://127.0.0.1:8000/home/kakaoLoginLogicRedirect'
     _url = f'https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={_restApiKey}&redirect_uri={_redirect_uri}&code={_qs}'
     _res = requests.post(_url)
     _result = _res.json()
@@ -48,7 +51,7 @@ def kakaoLogout(request):
         del request.session['access_token']
         return render(request, 'hometemplate/kakaologinhome.html')
     else:
-        return render(request, 'hometemplate/logoutError.html')
+        return render(request, 'hometemplate/kakaologoutError.html')
 
 #날씨 요약 정보
 def kakaoMessage_climate(request):
@@ -109,4 +112,4 @@ def kakaoMessage_climate(request):
 
     _res = requests.post(url_message, headers=_header, data=data)
     _result = _res.json()
-    return render(request, 'hometemplate/loginSuccess.html')
+    return render(request, 'hometemplate/kakaoMessageSent.html')

@@ -43,31 +43,14 @@
   <section id="hero">
     <div class="hero-container">
       <h1 class="text-light"><span>weather & Gather</span></h1>
-      {% if check %}
-        <div>
-            <h1>카카오 로그아웃</h1>
-                <form action="/home/kakaoLogout" method="GET">
-                    <button type = "카카오 로그아웃">
-                        <img src = '/static/assets/img/kakaologo.jpg' width = 50, height = 50 />
-                    </button>
-                </form>
-        </div>
-    {% else %}
-        <div>
-            <h1>카카오 로그인</h1>
-                <form action="/home/kakaoLoginLogic" method="GET">
-                    <button type = "카카오 로그인">
-                        <img src = '/static/assets/img/kakaologo.jpg' width = 50, height = 50 />
-                    </button>
-                </form>
-        </div>
-    {% endif %}
+      <h1>로그아웃 실패하였습니다.</h1>
+      <a href = "/home/index">Home으로 돌아가기</a>
     </div>
-<!-- Vendor JS Files -->
-<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-<!-- Template Main JS File -->
-<script src="{% static 'assets/js/main.js' %}"></script>
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
 </body>
 </html>
