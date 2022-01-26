@@ -7,6 +7,9 @@ from uuid import uuid4
 import os
 from config.settings import MEDIA_ROOT
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.forms import UserCreationForm
+
+
 
 # Create your views here.
 # Join이라는 함수 실행하면 get으로 호출했을 때 user앱 폴더에 있는 join.html을 보여줘라
@@ -30,6 +33,11 @@ class Join(APIView):
         
         return Response(status=200)
 
+# from django.contrib.auth import authenticate, login, get_user_model
+# from .forms import UserForm
+
+# User = get_user_model()
+
 class Login(APIView):
     def get(self, request):
         #return render(request, "user/testIndex.html")
@@ -51,8 +59,22 @@ class Login(APIView):
             # 세션에 사용자아이디인 identi 넣음
             # session['identi'] 찾으면 내가 저장한 아이디가 나온다
             # 아이디를 세션정보에 넣게 되면 아이디를 가지고 user=User.objects.filter() 해서 
-            # user의 닉네임이나 나이 등을 가져올 수 있게 됨   
+            # user의 닉네임이나 나이 등을 가져올 수 있게 됨 
+            
+            # form = UserForm(request.POST)
+            # if form.is_valid():
+            #     form.save()
+
             request.session['identi'] = identi
+            # username = form.cleaned_data.get('nickname')
+            # raw_password = form.cleaned_data.get('password')
+            # user = authenticate(username=username, password=raw_password)
+
+            # authenticate는 auth 관련 옵션인데 user 모델을 만들어서 사용하시고 계시는거같아요  
+            # 이 부분을 찾아서 수정하시면될것같습니다
+            
+            # login(request, user)
+
             return Response(status=200)
         else:
             return Response(status=400, data=dict(message="회원정보가 잘못되었습니다."))
