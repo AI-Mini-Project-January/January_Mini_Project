@@ -154,7 +154,7 @@ def get_weather(request):
     # 예보 시각(fcstTime)에 맞는 날씨 정보 담기)
     for item in r_item:
         if(item.get("fcstDate") == today_date and item.get("fcstTime") == str(int(time) // 100 * 100) and item.get("category") == "TMP"):
-            today['기온'] = item["fcstValue"] + '℃'
+            today['기온'] = item["fcstValue"] 
 
         if(item.get("fcstDate") == today_date and item.get("fcstTime") == str(int(time) // 100 * 100) and item.get("category") == "PTY"):
             rainfall_code = item.get("fcstValue") 
@@ -197,10 +197,26 @@ def get_weather(request):
             else:
                 weather_state = '흐림'
 
-            today['sky'] = weather_state
+            today['날씨'] = weather_state
 
-   
-    today["date"] = today_date
+
+    tmp = int(today['기온'])
+    sky = today['날씨']
+    pty = today['눈/비 소식']
+    pop = today['강수확률']
+    wsd = today['풍속']
+    reh = today['습도']
+
+    # today_result에 현재 날씨 정보 
+
+    today_result = []
+    today_result.append(tmp)
+    today_result.append(sky)
+    today_result.append(pty)
+    today_result.append(pop)
+    today_result.append(wsd)
+    today_result.append(reh)
+    today_result.append(today_date)
 
     
 
@@ -210,7 +226,7 @@ def get_weather(request):
 
     for item in r_item:
         if(item.get("fcstTime") == "0700" and item.get("fcstDate") == tomorrow_date and item.get("category") == "TMP"):
-            tomorrow['기온'] = item["fcstValue"] + '℃'
+            tomorrow['기온'] = item["fcstValue"]
 
         if(item.get("fcstTime") == "0700" and item.get("fcstDate") == tomorrow_date and item.get("category") == "PTY"):
             rainfall_code = item.get("fcstValue") 
@@ -253,11 +269,26 @@ def get_weather(request):
             else:
                 weather_state = '흐림'
 
-            tomorrow['sky'] = weather_state
+            tomorrow['날씨'] = weather_state
 
-    
-    tomorrow["date"] = tomorrow_date
-    
+    tmp = int(tomorrow['기온'])
+    sky = tomorrow['날씨']
+    pty = tomorrow['눈/비 소식']
+    pop = tomorrow['강수확률']
+    wsd = tomorrow['풍속']
+    reh = tomorrow['습도']
+
+    # tomorrow_result에 현재 날씨 정보 
+
+    tomorrow_result = []
+    tomorrow_result.append(tmp)
+    tomorrow_result.append(sky)
+    tomorrow_result.append(pty)
+    tomorrow_result.append(pop)
+    tomorrow_result.append(wsd)
+    tomorrow_result.append(reh)
+    tomorrow_result.append(tomorrow_date)
+
 
     print(base_date)
     print(base_time)
@@ -267,7 +298,7 @@ def get_weather(request):
     
     # return HttpResponse(res)
     # weather.html로 보내 출력하기
-    return render(request, 'weatherapp/weather.html', {'today': today, 'tomorrow':tomorrow})
+    return render(request, 'weatherapp/weather.html', {'today': today_result, 'tomorrow':tomorrow_result})
 
 
 

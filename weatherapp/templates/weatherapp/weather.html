@@ -24,55 +24,58 @@ function getCookie(name) {
     </head>
     <body>
         <h1> Weather & Gather </h1>
-        <h2>Weather & Clothes   Gather   Mypage</h2>
-        <h2>{{data}}</h2>
-        <h2>{{tomorrow}}</h2>
-        <h3>{{ data.6 }}</h3>
-        <h3>{{date_info}} </h3>
-        <h2>날씨</h2>
-        
-        <td>
+        <box onclick="">Weather & Clothes</box>
+        <box onclick="">Gather</box>
+        <box onclick="">Mypage</box>
+        <hr>
 
-            {% if data.3 == '소나기' %}
+
+        <h2>현재 날씨{{today}}</h2>
+        <h2>내일 출근 날씨{{tomorrow}}</h2>
+
+        <h3>현재 날씨</h3>
+    
+        <box>
+
+            {% if today.2 == '소나기' %}
                 <img src='{% static "shower.svg" %}' style = "width: 200; height: 200">
-            {% elif data.3 == '눈' %}
+            {% elif today.2 == '눈' %}
                 <img src='{% static "snow.svg" %}'style = "width: 200; height: 200">
-            {% elif data.3 == '비/눈' %}
+            {% elif today.2 == '비/눈' %}
                 <img src='{% static "sleet.svg" %}'style = "width: 200; height: 200">
-            {% elif data.3 == '비' %}
+            {% elif today.2 == '비' %}
                 <img src='{% static "rain.svg" %}'style = "width: 200; height: 200">
             {% else %}
-                {% if data.2 == '맑음' %}
+                {% if today.1 == '맑음' %}
                     <img src='{% static "clear-day.svg" %}'style = "width: 200; height: 200">
-                {% elif data.2 == '구름많음' %}
+                {% elif today.1 == '구름많음' %}
                     <img src='{% static "cloudy.svg" %}'style = "width: 200; height: 200">
                 {% else %}
                     <img src='{% static "overcast.svg" %}'style = "width: 200; height: 200">
                 {% endif%}
             {% endif %}
 
-        </td>
+        </box>
 
-        <h3>{% if data.3 != '없음' %}
-                {{ data.3 }}
+        <box>기온 {{ today.0 }}℃</box>
+
+        <h3>{% if today.2 != '없음' %}
+                {{ today.2 }}
             {% else %}
-                {{ data.2 }} 
+                {{ today.1 }} 
             {% endif %}
-            
-            기온 {{ data.0 }} 
-        
         </h3>
         
         
         <img src='{% static "wind.svg" %}'>
-        <h3>바람 {{ data.1 }}</h3>
+        <h3>바람 {{ today.1 }}</h3>
         
-        <h3> 눈/비 소식 {{ data.3 }} </h3>
+        <h3> 눈/비 소식 {{ today.3 }} </h3>
         
         <img src='{% static "raindrops.svg" %}'>
-        <h3> 강수 확률 {{ data.4 }}</h3>
-        <h3>습도 {{ data.5 }}</h3>
-        {% comment %} <p>{{ data }} </p><hr> {% endcomment %}
+        <h3> 강수 확률 {{ today.4 }}</h3>
+        <h3>습도 {{ today.5 }}</h3>
+        {% comment %} <p>{{ today }} </p><hr> {% endcomment %}
         
         
        
@@ -82,13 +85,13 @@ function getCookie(name) {
         
         
         <td> 
-            {% if data.6 >= "20220131" and data.6 <= "20220202" %}
+            {% if today.6 >= "20220131" and today.6 <= "20220202" %}
                 <img src = '{% static "hanbok.png" %}' style = "width: 150; height: auto;">
                 <img src = '{% static "hanbok (2).png" %}' style = "width: 150; height: auto;">
                 <img src = '{% static "hanbok (3).png" %}' style = "width: 150; height: auto;">
                 <img src = '{% static "lucky-bag.png" %}' style = "width: 150; height: auto;">
 
-            {% elif data.6 >= "20220909" and data.6 <= "20220912" %}
+            {% elif today.6 >= "20220909" and today.6 <= "20220912" %}
                 <img src = '{% static "hanbok.png" %}' style = "width: 150; height: auto;">
                 <img src = '{% static "hanbok (2).png" %}' style = "width: 150; height: auto;">
                 <img src = '{% static "hanbok (3).png" %}' style = "width: 150; height: auto;">
@@ -96,45 +99,45 @@ function getCookie(name) {
 
             {% else %}
 
-                {% if data.0 >= 28 %}
+                {% if today.0 >= 28 %}
                     <img src='{% static "sleeveless-shirt.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "skirt (2).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "sleeveless-shirt (1).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "sleeveless.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "denim-shorts.png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 23 %}
+                {% elif today.0 >= 23 %}
                     <img src='{% static "tshirt (3).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "pants (2).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "skirt.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "jogger-pants.png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 20 %}
+                {% elif today.0 >= 20 %}
                     <img src='{% static "blouse.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "tshirt (2).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "pants.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "shirt.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "dress.png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 17 %}
+                {% elif today.0 >= 17 %}
                     <img src='{% static "hoodie (3).png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "ripped-jeans.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "hoodie.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "hoodie (4).png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 12 %}
+                {% elif today.0 >= 12 %}
                     <img src='{% static "denim-jacket.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "long-skirt.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "cardigan.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "cardigan (2).png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 9 %}
+                {% elif today.0 >= 9 %}
                     <img src='{% static "turtleneck.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "trench-coat.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "jacket.png" %}'style = "width: 150; height: auto;">
                     <img src='{% static "jumper.png" %}'style = "width: 150; height: auto;">
             
-                {% elif data.0 >= 5 %}
+                {% elif today.0 >= 5 %}
                     <img src='{% static "fur-jacket.png" %}'style="width: 150; height: auto;">
                     <img src='{% static "fur-coat.png" %}'style="width: 150; height: auto;">
                     <img src='{% static "coat.png" %}'style="width: 150; height: auto;">
