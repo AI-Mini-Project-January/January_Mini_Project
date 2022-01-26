@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 import requests
 import json
@@ -5,7 +6,6 @@ import datetime
 import urllib
 import urllib.request
 import math
-
 
 
 def get_location(request):
@@ -23,6 +23,7 @@ def get_location(request):
 
     return lat, lng
 
+
 #get_location함수를 통해 위도와 경도 값을 넣고 x좌표, y좌표 얻어내기
 def grid(lat, lng):
     v1 = lat
@@ -37,7 +38,6 @@ def grid(lat, lng):
     XO = 43     ##  기준점 X좌표
     YO = 136     ##  기준점 Y좌표
     DEGRAD = math.pi / 180.0
-    RADDEG = 180.0 / math.pi
 
     re = Re / grid
     slat1 = slat1 * DEGRAD  #표준위도1
@@ -69,19 +69,24 @@ def grid(lat, lng):
 
 
 def get_weather(request):
+
     lat, lng = get_location(request)
+    print(lat, lng)
+
     x, y = grid(lat, lng)
+    print(x,y)
 
     url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
     today = datetime.datetime.today()
     base_date = today.strftime("%Y%m%d")
-    base_time = "1700"
+    base_time = "2000"
     params ={'serviceKey' : 'Rty09EbsqEEgCQyDM03L//hEwSnSIENiavOyVF3BsZwUSxzkFNKrJFgbXTSayi81l4WbTijUpuHbow5W/FwB4w==', 
-        'pageNo' : '1', 'numOfRows' : '50', 'dataType' : 'JSON',
+        'pageNo' : '1', 'numOfRows' : '12', 'dataType' : 'JSON',
         'base_date' : base_date, 'base_time' : base_time, 'nx' : x, 'ny' : y}
 
     res = requests.get(url, params=params)
 
+    
     #json 값에서 item 뽑기
 
     r_dict = json.loads(res.text)
@@ -158,5 +163,12 @@ def get_weather(request):
     result.append(pty)
     result.append(pop)
     result.append(reh)
+    result.append(base_date)
 
+    print(r_item)
+    print(data)
+    print(result)
+    print(base_date)
+
+    # return HttpResponse(res)
     return render(request, 'weatherapp/weather.html', {'data':result})

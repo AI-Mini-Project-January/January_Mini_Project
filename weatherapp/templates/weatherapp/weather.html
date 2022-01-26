@@ -17,63 +17,141 @@ function getCookie(name) {
 
 {% load static %}
 
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Weather & Gather </title>
+    </head>
+    <body>
+        <h1> Weather & Gather </h1>
+        <h2>Weather & Clothes   Gather   Mypage</h2>
+        <h3>{{ data.6 }}</h3>
+        <h2>날씨</h2>
+        
+        <td>
 
-<h2>Weather & Clothes   Board   Mypage</h2>
-<h2>날씨</h2>
+            {% if data.3 == '소나기' %}
+                <img src='{% static "shower.svg" %}' style = "width: 200; height: 200">
+            {% elif data.3 == '눈' %}
+                <img src='{% static "snow.svg" %}'style = "width: 200; height: 200">
+            {% elif data.3 == '비/눈' %}
+                <img src='{% static "sleet.svg" %}'style = "width: 200; height: 200">
+            {% elif data.3 == '비' %}
+                <img src='{% static "rain.svg" %}'style = "width: 200; height: 200">
+            {% else %}
+                {% if data.2 == '맑음' %}
+                    <img src='{% static "clear-day.svg" %}'style = "width: 200; height: 200">
+                {% elif data.2 == '구름많음' %}
+                    <img src='{% static "cloudy.svg" %}'style = "width: 200; height: 200">
+                {% else %}
+                    <img src='{% static "overcast.svg" %}'style = "width: 200; height: 200">
+                {% endif%}
+            {% endif %}
 
-<td>
-    {% if data.2 == '맑음' %}
-        <img src='{% static "clear-day.svg" %}'>
-    {% elif data.2 == '구름많음' %}
-        <img src='{% static "cloudy.svg" %}'>
-    {% else %}
-        <img src='{% static "overcast.svg" %}'>
-    {% endif %}
-</td>
-<h3>{{ data.2 }} 기온 {{ data.0 }} </h3>
+        </td>
+<!-- 
+        <h3>{% if data.3 %}
+                {{ data.3 }}
+            {% else %}
+                {{ data.2 }} 
+            {% endif %}
+            
+            기온 {{ data.0 }} 
+        
+        </h3> -->
+        
+        
+        <img src='{% static "wind.svg" %}'>
+        <h3>바람 {{ data.1 }}</h3>
+        
+        <h3> 눈/비 소식 {{ data.3 }} </h3>
+        
+        <img src='{% static "raindrops.svg" %}'>
+        <h3> 강수 확률 {{ data.4 }}</h3>
+        <h3>습도 {{ data.5 }}</h3>
+        {% comment %} <p>{{ data }} </p><hr> {% endcomment %}
+        
+        
+       
 
+        <h2>옷 추천</h2>
+        <h3>oo님 오늘은 이렇게 입으시는 건 어때요?</h3>
+        
+        
+        <td> 
+            {% if data.6 >= "20220131" and data.6 <= "20220202" %}
+                <img src = '{% static "hanbok.png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "hanbok (2).png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "hanbok (3).png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "lucky-bag.png" %}' style = "width: 150; height: auto;">
 
-{% comment %} 풍속 {% endcomment %}
-<h3>바람 {{ data.1 }}</h3>
+            {% elif data.6 >= "20220909" and data.6 <= "20220912" %}
+                <img src = '{% static "hanbok.png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "hanbok (2).png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "hanbok (3).png" %}' style = "width: 150; height: auto;">
+                <img src = '{% static "lucky-bag.png" %}' style = "width: 150; height: auto;">
 
-<h3> 눈/비 소식 {{ data.3 }} </h3>
+            {% else %}
 
-
-<h3> 강수 확률 {{ data.4 }}</h3>
-<h3>습도 {{ data.5 }}</h3>
-{% comment %} <p>{{ data }} </p><hr> {% endcomment %}
-
-
-
-
-<h2>옷 추천</h2>
-<h3>대장님 오늘은 이렇게 입으시는 건 어때요?</h3>
-
-
-
-<td>
-    {% if data.0 >= 28 %}
-        <img src='{% static "sleeveless-shirt.png" %}'>
-    {% elif data.0 >= 23 %}
-        <img src='{% static "skirt.png" %}'>
-    {% elif data.0 >= 20 %}
-        <img src='{% static "dress.png" %}'>
-    {% elif data.0 >= 17 %}
-        <img src='{% static "ripped-jeans.png" %}'>
-    {% elif data.0 >= 12 %}
-        <img src='{% static "denim-jacket.png" %}'>
-    {% elif data.0 >= 9 %}
-        <img src='{% static "trench-coat.png" %}'>
-    {% elif data.0 >= 5 %}
-        <img src='{% static "coat.png" %}'>
-    {% else %}
-        <img src='{% static "puffer-coat.png" %}'>
-        <img src='{% static "scarf.png" %}'>
-        <img src='{% static "mittens.png" %}'>
-        <img src='{% static "beanie.png" %}'>
-
-    {% endif %}
-</td>
+                {% if data.0 >= 28 %}
+                    <img src='{% static "sleeveless-shirt.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "skirt (2).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "sleeveless-shirt (1).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "sleeveless.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "denim-shorts.png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 23 %}
+                    <img src='{% static "tshirt (3).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "pants (2).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "skirt.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "jogger-pants.png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 20 %}
+                    <img src='{% static "blouse.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "tshirt (2).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "pants.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "shirt.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "dress.png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 17 %}
+                    <img src='{% static "hoodie (3).png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "ripped-jeans.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "hoodie.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "hoodie (4).png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 12 %}
+                    <img src='{% static "denim-jacket.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "long-skirt.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "cardigan.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "cardigan (2).png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 9 %}
+                    <img src='{% static "turtleneck.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "trench-coat.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "jacket.png" %}'style = "width: 150; height: auto;">
+                    <img src='{% static "jumper.png" %}'style = "width: 150; height: auto;">
+            
+                {% elif data.0 >= 5 %}
+                    <img src='{% static "fur-jacket.png" %}'style="width: 150; height: auto;">
+                    <img src='{% static "fur-coat.png" %}'style="width: 150; height: auto;">
+                    <img src='{% static "coat.png" %}'style="width: 150; height: auto;">
+                    <img src='{% static "pad.png" %}'style="width: 150; height: auto;">
+            
+                {% else %}
+                    <img src='{% static "scarf.png" %}' style="width: 150; height: auto;">
+                    <img src='{% static "beanie.png" %}'style="width: 150; height: auto;">
+                    <img src='{% static "mittens.png" %}'style="width: 150; height: auto;">
+                    <img src='{% static "puffer-coat.png" %}'style="width: 150; height: auto;">
+            
+                {% endif %}
+            {% endif %}
+        </td>
+        
+    </body>
+    <footer>"designed Freepik, justicon, Nhor Phai from Flaticon"
+        Copyright © 2022 Bas Milius. All rights reserved.
+        </footer>
+</html>
 
 
 
