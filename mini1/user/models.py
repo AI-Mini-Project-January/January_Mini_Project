@@ -1,6 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
-from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, UserManager, PermissionsMixin
 
 # Create your models here.
 # 커스텀 유저만들꺼임 -> AbstractBaseUser 이거를 상속받아서 만들면 그게 유저필드가 됨
@@ -11,18 +11,44 @@ from django.contrib.auth.models import UserManager
 # 비밀번호 -> 장고에서 만들어주는걸로 디폴트
 # 나이 -> 
 # 프로필 사진 저장
-class User(AbstractBaseUser):
+# class User(AbstractBaseUser):
     
+#     profile_image = models.TextField()
+#     nickname = models.CharField(max_length=24, unique=True)
+#     identi= models.CharField(max_length=24, unique=True)
+#     age = models.IntegerField()
+# # 실제로 유저를 선택하면 그 유저의 이름을 어떤필드를 쓸거냐
+#     USERNAME_FIELD = 'nickname'
+
+#     objects = UserManager()
+
+# # Meta 안해주면 user_user 테이블이 됨
+#     class Meta:
+#         db_table = "User"
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+    def create_user(self, nickname, password=None):
+        if not nickname :
+            raise ValueError('must have user nickname')
+        user = self.model(
+            nickname = nickname
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    objects = UserManager()
+    nickname = models.CharField(max_length=24,null=False,unique=True)
     profile_image = models.TextField()
-    nickname = models.CharField(max_length=24, unique=True)
     identi= models.CharField(max_length=24, unique=True)
     age = models.IntegerField()
-# 실제로 유저를 선택하면 그 유저의 이름을 어떤필드를 쓸거냐
+
     USERNAME_FIELD = 'nickname'
-
-    objects = UserManager()
-
-# Meta 안해주면 user_user 테이블이 됨
+    # REQUIRED_FIELDS = ['email']
+        
     class Meta:
         db_table = "User"
 
