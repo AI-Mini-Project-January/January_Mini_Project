@@ -1,1 +1,14 @@
-<h1> update page </h1>
+{% load bootstrap4 %}
+
+{% block body %}
+    <h1 class="text-center">회원정보 변경</h1>
+    <form method="POST" enctype="multipart/form-data">
+    <!-- 파일 업로드 시 form method를 POST로 -->
+        {% csrf_token %}
+        {% bootstrap_form user_change_form %}
+        {% bootstrap_form profile_form %}
+        <button type="submit" class="btn btn-primary">수정</button>
+    </form>
+
+
+    
