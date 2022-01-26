@@ -25,7 +25,10 @@ function getCookie(name) {
     <body>
         <h1> Weather & Gather </h1>
         <h2>Weather & Clothes   Gather   Mypage</h2>
+        <h2>{{data}}</h2>
+        <h2>{{tomorrow}}</h2>
         <h3>{{ data.6 }}</h3>
+        <h3>{{date_info}} </h3>
         <h2>날씨</h2>
         
         <td>
@@ -49,8 +52,8 @@ function getCookie(name) {
             {% endif %}
 
         </td>
-<!-- 
-        <h3>{% if data.3 %}
+
+        <h3>{% if data.3 != '없음' %}
                 {{ data.3 }}
             {% else %}
                 {{ data.2 }} 
@@ -58,7 +61,7 @@ function getCookie(name) {
             
             기온 {{ data.0 }} 
         
-        </h3> -->
+        </h3>
         
         
         <img src='{% static "wind.svg" %}'>
