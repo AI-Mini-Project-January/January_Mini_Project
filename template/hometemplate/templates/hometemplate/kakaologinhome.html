@@ -11,15 +11,15 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="{%static 'assets/img/favicon.png'%}" rel="icon">
-  <link href="{% static 'assets/img/apple-touch-icon.png'%}" rel="apple-touch-icon">
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <!-- <link href="assets/css/style.css" rel="stylesheet"> -->
@@ -43,14 +43,31 @@
   <section id="hero">
     <div class="hero-container">
       <h1 class="text-light"><span>weather & Gather</span></h1>
-      <h1>오늘의 날씨를 확인하고 옷차림 미리 준비하세요</h1>
-    </div>
-    <a href = "/hometemplate/kakaologinhome.html">카카오톡으로 날씨 정보 보내기</a>
-
+      {% if check %}
+        <div>
+            <h1>카카오 로그아웃</h1>
+                <form action="/home/kakaoLogout" method="GET">
+                    <button type = "카카오 로그아웃">
+                        <img src = '/static/assets/img/kakaologo.jpg' width = 50, height = 50 />
+                    </button>
+                </form>
+        </div>
+    {% else %}
+        <div>
+            <h1>카카오 로그인</h1>
+                <form action="/home/kakaoLoginLogic" method="GET">
+                    <button type = "카카오 로그인">
+                        <img src = '/static/kakaologo.jpg' width = 50, height = 50 />
+                    </button>
+                </form>
+        </div>
+    {% endif %}
+    </div>  
   <!-- Vendor JS Files -->
-  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Template Main JS File -->
-  <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="assets/js/main.js"></script>
+
 </body>
 </html>
