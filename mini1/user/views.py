@@ -1,5 +1,5 @@
 import profile
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User
@@ -7,6 +7,9 @@ from uuid import uuid4
 import os
 from config.settings import MEDIA_ROOT
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.forms import UserCreationForm
+
+
 
 # Create your views here.
 # Join이라는 함수 실행하면 get으로 호출했을 때 user앱 폴더에 있는 join.html을 보여줘라
@@ -30,6 +33,11 @@ class Join(APIView):
         
         return Response(status=200)
 
+# from django.contrib.auth import authenticate, login, get_user_model
+# from .forms import UserForm
+
+# User = get_user_model()
+
 class Login(APIView):
     def get(self, request):
         #return render(request, "user/testIndex.html")
@@ -51,8 +59,22 @@ class Login(APIView):
             # 세션에 사용자아이디인 identi 넣음
             # session['identi'] 찾으면 내가 저장한 아이디가 나온다
             # 아이디를 세션정보에 넣게 되면 아이디를 가지고 user=User.objects.filter() 해서 
-            # user의 닉네임이나 나이 등을 가져올 수 있게 됨   
+            # user의 닉네임이나 나이 등을 가져올 수 있게 됨 
+            
+            # form = UserForm(request.POST)
+            # if form.is_valid():
+            #     form.save()
+
             request.session['identi'] = identi
+            # username = form.cleaned_data.get('nickname')
+            # raw_password = form.cleaned_data.get('password')
+            # user = authenticate(username=username, password=raw_password)
+
+            # authenticate는 auth 관련 옵션인데 user 모델을 만들어서 사용하시고 계시는거같아요  
+            # 이 부분을 찾아서 수정하시면될것같습니다
+            
+            # login(request, user)
+
             return Response(status=200)
         else:
             return Response(status=400, data=dict(message="회원정보가 잘못되었습니다."))
@@ -91,3 +113,301 @@ class UploadProfile(APIView):
         user.save()
 
         return Response(status = 200)
+
+
+
+#KAKAO API 
+#카카오 로그인
+import requests
+import json
+from django.template import loader
+from django.http import HttpResponse, JsonResponse
+
+# Create your views here.
+# class Kakao(APIView):
+#     def kakaologinHome(self, request):
+#         _context = {'check':False}
+#         if request.session.get('access_token'):
+#             _context['check'] = True
+#         return render(request, 'user/kakaologin.html', _context)
+
+#     def kakaoLoginLogic(self, request):
+#         _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
+#         _redirectUrl = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+#         _url = f'https://kauth.kakao.com/oauth/authorize?client_id={_restApiKey}&redirect_uri={_redirectUrl}&response_type=code'
+#         return redirect(_url)
+
+#     def kakaoLoginLogicRedirect(self, request):
+#         _qs = request.GET['code']
+#         _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
+#         _redirect_uri = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+#         _url = f'https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={_restApiKey}&redirect_uri={_redirect_uri}&code={_qs}'
+#         _res = requests.post(_url)
+#         _result = _res.json()
+#         request.session['access_token'] = _result['access_token']
+#         request.session.modified = True
+#         return render(request, 'user/kakaologinSuccess.html')
+
+#     def kakaoLogout(self, request):
+#         _token = request.session['access_token']
+#         _url = 'https://kapi.kakao.com/v1/user/logout'
+#         _header = {
+#             'Authorization': f'bearer {_token}'
+#         }
+#             # _url = 'https://kapi.kakao.com/v1/user/unlink'
+#             # _header = {
+#             #   'Authorization': f'bearer {_token}',
+#             # }
+#         _res = requests.post(_url, headers=_header)
+#         _result = _res.json()
+#         if _result.get('id'):
+#             del request.session['access_token']
+#             return render(request, 'user/kakaologinoutSuccess.html')
+#         else:
+#             return render(request, 'user/kakaologoutError.html')
+
+#         #날씨 요약 정보
+#     def kakaoMessage_climate(self, request):
+#         temperature = 24
+#         rain = 30
+#         cloth = ""
+
+#         if temperature <= 4:
+#             cloth = "패딩, 목도리, 장갑 매우 추워요"
+#         elif temperature >= 5 and temperature <= 8:
+#             cloth = "울코트, 기모"
+#         elif temperature >= 9 and temperature <= 11:
+#             cloth = "트렌치 코트, 점퍼"
+#         elif temperature >= 12 and temperature <= 16:
+#             cloth = "가디건, 청자켓, 청바지"
+#         elif temperature >= 17 and temperature <= 19:
+#             cloth = "후드티, 맨투맨"
+#         elif temperature >= 20 and temperature <= 22:
+#             cloth = "블라우스, 슬랙스"
+#         elif temperature >= 23 and temperature <= 27:
+#             cloth = "반팔, 반바지, 얇은 셔츠"
+#         else:
+#             cloth = "시원하게 입기"
+
+
+
+#         url_message = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+
+#         _token = request.session['access_token']
+
+#         _header = {
+#             'Authorization': f'bearer {_token}'
+#         }
+            
+#             # _nickname = "희동이누나"    #String
+#             # _today = "오늘의 날씨입니다."   #String
+
+#         data={
+#             "template_object": json.dumps({
+#                 "object_type": "text",
+#                 "text": "오늘의 날씨 요약 정보는 \n" + "기온 : " + (str)(temperature) + "'C\n강수확률 : " + (str)(rain) + "% 이므로\n오늘의 옷차림은 " + cloth + "를 추천드립니다.",
+#                 "link":{
+#                     "web_url":"http://127.0.0.1:8000/user/login"
+#                 }
+#             })
+#         }
+
+#             # data = {
+#             #     "template_object" : json.dumps({
+#             #         "object_type": "list",
+#             #         "header_title": "오늘의 날씨입니다.",
+#             #         "header_link" : "http://127.0.0.1:8000/kakao/home",
+#             #         "contents" : climate
+#             #     })
+#             # }
+
+#             # print(climate_list)
+
+#         _res = requests.post(url_message, headers=_header, data=data)
+#         _result = _res.json()
+#         return render(request, 'user/kakaoclimatemessage.html')
+
+#         #패스워드 찾기
+#     def password_throw(self, request):
+#         return render(request, 'user/kakaopassword.html')
+#             # return render(request, 'kakaoproejct/passwordcheck.html')
+
+#         # def password_check(request):
+#         #     me = (str)(request.GET.get('me'))
+#         #     ID = User.objects.filter(user_identi = me).values("user_identi")
+
+#         #     if ID == '':
+#         #         return render(request, 'kakaoproject/passwordError.html')
+#         #     else:
+#         #         return render(request, 'kakaoproject/passwordSuccess.html', {'me' : me})
+
+#     def kakaoMessage_password(self, request):
+#         me = (str)(request.GET.get('me'))
+#         ID = (str)(list(User.objects.filter(user_identi = me).values("user_identi")))
+#         password = (str)(list(User.objects.filter(user_identi = me).values("password")))
+
+#         url_message = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+
+#         _token = request.session['access_token']
+
+#         _header = {
+#             'Authorization': f'bearer {_token}'
+#         }
+
+#         data={
+#             "template_object": json.dumps({
+#                 "object_type": "text",
+#                 "text": ID + "님 패스워드는 " + password + "입니다.",
+#                 "link":{
+#                     "web_url":"http://127.0.0.1:8000/user/login"
+#                 }
+#             })
+#         }
+
+#         _res = requests.post(url_message, headers=_header, data=data)
+#         _result = _res.json()
+#         return render(request, 'user/kakaopasswordSuccess.html')
+
+
+def kakaologinHome(request):
+    _context = {'check':False}
+    if request.session.get('access_token'):
+        _context['check'] = True
+    return render(request, 'user/kakaologin.html', _context)
+
+def kakaoLoginLogic(request):
+    _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
+    _redirectUrl = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+    _url = f'https://kauth.kakao.com/oauth/authorize?client_id={_restApiKey}&redirect_uri={_redirectUrl}&response_type=code'
+    return redirect(_url)
+
+def kakaoLoginLogicRedirect(request):
+    _qs = request.GET['code']
+    _restApiKey = '5d03e24af9d6c95a6f526e3308d8879d' # 입력필요
+    _redirect_uri = 'http://127.0.0.1:8000/kakao/kakaoLoginLogicRedirect'
+    _url = f'https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={_restApiKey}&redirect_uri={_redirect_uri}&code={_qs}'
+    _res = requests.post(_url)
+    _result = _res.json()
+    request.session['access_token'] = _result['access_token']
+    request.session.modified = True
+    return render(request, 'user/kakaologinSuccess.html')
+
+def kakaoLogout(request):
+    _token = request.session['access_token']
+    _url = 'https://kapi.kakao.com/v1/user/logout'
+    _header = {
+        'Authorization': f'bearer {_token}'
+    }
+            # _url = 'https://kapi.kakao.com/v1/user/unlink'
+            # _header = {
+            #   'Authorization': f'bearer {_token}',
+            # }
+    _res = requests.post(_url, headers=_header)
+    _result = _res.json()
+    if _result.get('id'):
+        del request.session['access_token']
+        return render(request, 'user/kakaologinoutSuccess.html')
+    else:
+        return render(request, 'user/kakaologoutError.html')
+
+        #날씨 요약 정보
+def kakaoMessage_climate(request):
+    temperature = 24
+    rain = 30
+    cloth = ""
+
+    if temperature <= 4:
+        cloth = "패딩, 목도리, 장갑 매우 추워요"
+    elif temperature >= 5 and temperature <= 8:
+        cloth = "울코트, 기모"
+    elif temperature >= 9 and temperature <= 11:
+        cloth = "트렌치 코트, 점퍼"
+    elif temperature >= 12 and temperature <= 16:
+        cloth = "가디건, 청자켓, 청바지"
+    elif temperature >= 17 and temperature <= 19:
+        cloth = "후드티, 맨투맨"
+    elif temperature >= 20 and temperature <= 22:
+        cloth = "블라우스, 슬랙스"
+    elif temperature >= 23 and temperature <= 27:
+        cloth = "반팔, 반바지, 얇은 셔츠"
+    else:
+        cloth = "시원하게 입기"
+
+
+
+    url_message = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+
+    _token = request.session['access_token']
+
+    _header = {
+        'Authorization': f'bearer {_token}'
+    }
+            
+            # _nickname = "희동이누나"    #String
+            # _today = "오늘의 날씨입니다."   #String
+
+    data={
+        "template_object": json.dumps({
+            "object_type": "text",
+            "text": "오늘의 날씨 요약 정보는 \n" + "기온 : " + (str)(temperature) + "'C\n강수확률 : " + (str)(rain) + "% 이므로\n오늘의 옷차림은 " + cloth + "를 추천드립니다.",
+            "link":{
+                "web_url":"http://127.0.0.1:8000/user/login"
+            }
+        })
+    }
+
+            # data = {
+            #     "template_object" : json.dumps({
+            #         "object_type": "list",
+            #         "header_title": "오늘의 날씨입니다.",
+            #         "header_link" : "http://127.0.0.1:8000/kakao/home",
+            #         "contents" : climate
+            #     })
+            # }
+
+            # print(climate_list)
+
+    _res = requests.post(url_message, headers=_header, data=data)
+    _result = _res.json()
+    return render(request, 'user/kakaoclimatemessage.html')
+
+        #패스워드 찾기
+def password_throw(request):
+    return render(request, 'user/kakaopassword.html')
+            # return render(request, 'kakaoproejct/passwordcheck.html')
+
+        # def password_check(request):
+        #     me = (str)(request.GET.get('me'))
+        #     ID = User.objects.filter(user_identi = me).values("user_identi")
+
+        #     if ID == '':
+        #         return render(request, 'kakaoproject/passwordError.html')
+        #     else:
+        #         return render(request, 'kakaoproject/passwordSuccess.html', {'me' : me})
+
+def kakaoMessage_password(request):
+    me = (str)(request.GET.get('me'))
+    ID = (str)(list(User.objects.filter(user_identi = me).values("user_identi")))
+    password = (str)(list(User.objects.filter(user_identi = me).values("password")))
+
+    url_message = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
+
+    _token = request.session['access_token']
+
+    _header = {
+        'Authorization': f'bearer {_token}'
+    }
+
+    data={
+        "template_object": json.dumps({
+            "object_type": "text",
+            "text": ID + "님 패스워드는 " + password + "입니다.",
+            "link":{
+                "web_url":"http://127.0.0.1:8000/user/login"
+            }
+        })
+    }
+
+    _res = requests.post(url_message, headers=_header, data=data)
+    _result = _res.json()
+    return render(request, 'user/kakaopasswordSuccess.html')
