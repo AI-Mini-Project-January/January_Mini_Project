@@ -1,0 +1,39 @@
+{% if check %}
+    <div>
+        <h1>카카오 로그아웃</h1>
+            <form action="/main/user/kakaoLogout" method="GET">
+                <button id = "kakao_login" class="btn btn-primary" style="width: 100%">카카오 로그아웃</button>
+            </form>
+    </div>
+{% else %}
+    <div>
+        <h1>카카오 로그인</h1>
+            <form action="/main/user/kakaoLoginLogic" method="GET">
+                <button id = "kakao_login" class="btn btn-primary" style="width: 100%">카카오 로그인</button>
+            </form>
+    </div>
+{% endif %}
+
+<script>
+    var ws = new WebSocket('ws://127.0.0.1:8000/main/user');
+    ws.onopen = (event) => {
+      let sendData = { event: 'open' }
+      ws.send(JSON.stringify(sendData));
+    }
+    ws.onmessage = (event) => {
+      let recData = JSON.parse(event.data);
+      switch (recData.event) {
+        case 'response':
+          console.log(recData.data);
+          break;
+      }
+    }
+      
+    function myOnClick() {
+      let sendData = {
+        event: 'request',
+        data: 'some data...'
+      };
+      ws.send(JSON.stringify(sendData));
+    }
+    </script>

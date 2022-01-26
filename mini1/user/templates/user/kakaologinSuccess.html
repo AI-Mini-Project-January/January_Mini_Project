@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Success</title>
+</head>
+<body>
+    <h2>로그인 완료</h2>
+    <a href="/user/login/">Home으로 돌아가기</a>
+    <h2>날씨 정보 보내기</h2>
+    <button>
+        <a href="/user/kakaomessage_climate">날씨정보 보내기</a>
+    </button>
+    </button>
+    <h2>까먹은 패스워드 보내기</h2>
+    <form action = "/user/password/" method = "get">
+        <input type = "text" name = "me"><br>
+        {% csrf_token %}
+        <button>아이디 전송</button>
+    </form>
+</body>
+</html>
